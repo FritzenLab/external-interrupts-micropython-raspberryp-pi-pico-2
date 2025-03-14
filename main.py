@@ -24,15 +24,11 @@ def myFunction(button):
             shouldblink = 1
         else:
             shouldblink = 0
-            
-def led_interrupt(timer):
-    if shouldblink == 1:
+
         led.value(not led.value())
 
 if __name__ == "__main__":
-    # timer interrupt ideas from here: https://randomnerdtutorials.com/micropython-timer-interrupts-ep32-esp8266/
-    tim= Timer(-1)
-    tim.init(mode=Timer.PERIODIC, period=200, callback=led_interrupt)
+    
     
     while True:
         button.irq(trigger=Pin.IRQ_RISING, handler=myFunction)
@@ -41,5 +37,7 @@ if __name__ == "__main__":
         if time.ticks_diff(time.ticks_ms(), flowcontroltime) > 200: # this IF will be true every 200 ms
                 flowcontroltime= time.ticks_ms() #update with the "current" time
                 
-                
-                    
+                if shouldblink == 1:
+                    led.value(not led.value())
+                else:
+                    led.value(0)
